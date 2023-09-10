@@ -1,0 +1,119 @@
+@media screen and (min-width: 1000px) {
+	body {
+		max-width: 1000px;
+		margin: 0 auto; /* Центрирование содержимого */
+	}
+}
+
+/* Модальное окно */
+
+.modal {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 400px;
+	height: 100%;
+	background-color: rgba(207, 206, 206, 0.863); /* Затемнение заднего фона */
+	justify-content: center;
+	align-items: center;
+	z-index: 1;
+}
+
+.modal-content {
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Заголовок модального окна */
+
+.modal h2 {
+	text-align: center;
+}
+
+/* Вводные поля в модальном окне */
+
+.modal input[type='text'] {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+/* Кнопка "Сохранить" в модальном окне */
+
+#saveButton {
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	padding: 10px 20px;
+	cursor: pointer;
+	border-radius: 4px;
+	font-size: 16px;
+}
+
+#saveButton:hover {
+	background-color: #0056b3;
+}
+
+/* Главная страница с разделами и таблицей */
+
+#main-page {
+	display: block; /* По умолчанию отображается */
+	padding: 20px;
+}
+
+/* Переключатели разделов (табы) */
+
+.tabs {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	background-color: #f4f4f4;
+	padding: 10px 0;
+}
+
+.tab-button {
+	background-color: transparent;
+	border: none;
+	padding: 10px 20px;
+	cursor: pointer;
+	font-size: 16px;
+	color: #007bff;
+	border-bottom: 2px solid transparent;
+}
+
+.tab-button.active {
+	border-bottom: 2px solid #007bff;
+}
+
+/* Интерактивная таблица */
+
+.table-container {
+	margin-top: 20px;
+	overflow-x: auto;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+table th,
+table td {
+	padding: 10px;
+	border: 1px solid #ddd;
+	text-align: left;
+}
+
+/* Оформление разделов */
+
+/* Добавьте классы стилей для каждого раздела (presentation, successful-call и так далее) */
+.presentation {
+	display: block; /* По умолчанию отображается */
+}
+
+/* Другие стили и оформление для разделов здесь */

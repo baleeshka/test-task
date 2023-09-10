@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Интерактивное приложение</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+	<!-- Модальное окно для ввода имени и имени клиента -->
+	<div id="modal" class="modal">
+		<div class="modal-content">
+			<input type="text" id="operatorName" placeholder="Ваше имя">
+			<input type="text" id="clientName" placeholder="Имя клиента">
+			<button id="saveButton">Сохранить</button>
+		</div>
+	</div>
+
+	<!-- Главная страница с разделами и интерактивной таблицей -->
+	<div id="main-page">
+		<!-- Переключатели разделов -->
+		<div class="tabs">
+			<button class="tab-button active" data-section="presentation">Представление</button>
+			<button class="tab-button" data-section="successful-call">Дозвон, Успешно</button>
+			<button class="tab-button" data-section="rejected-call">Дозвон, Отказ</button>
+			<button class="tab-button" data-section="missed-call">Недозвон</button>
+			<button class="tab-button" data-section="callback">Перезвон</button>
+			<button class="tab-button" data-section="telephony-error">Ошибка телефонии</button>
+		</div>
+
+		<!-- Интерактивная таблица -->
+		<div class="table-container">
+			<table id="interactive-table">
+				<thead>
+					<tr>
+						<th>Тема</th>
+						<th>Фраза</th>
+						<th>Ответ</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- Здесь будет генерироваться контент таблицы динамически с использованием JavaScript -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<script src="script2.js"></script>
+</body>
+
+</html>
