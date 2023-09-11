@@ -121,3 +121,46 @@ table td {
 }
 
 /* Другие стили и оформление для разделов здесь */
+
+/* Стили для раздела "Дозвон, Успешно" */
+#successful-call {
+	display: block; /* По умолчанию отображается */
+	padding: 20px;
+	background-color: #ffffff;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	margin-top: 20px;
+	max-width: 400px;
+}
+
+/* Стили для радио-кнопок в разделе "Дозвон, Успешно" */
+#successful-call label {
+	display: block;
+	margin-bottom: 10px;
+}
+
+/* Стили для кнопки "Завершить работу с заданием" в разделе "Дозвон, Успешно" */
+#finishButton {
+	background-color: #0094ff; /* Более светлая синяя кнопка */
+	color: white;
+	border: none;
+	border-radius: 16px; /* Более округлая форма кнопки */
+	padding: 15px 25px; /* Большие отступы внутри кнопки */
+	margin-top: 20px;
+	cursor: pointer;
+	width: 100%;
+}
+
+/* Стили для навигации в разделе "Дозвон, Успешно" */
+#successful-call .navigation {
+	background-color: #0094ff;
+	color: white;
+	padding: 10px 20px;
+	border-radius: 10px;
+	margin-bottom: 20px;
+}
+
+/* Стили для контента под навигацией в разделе "Дозвон, Успешно" */
+#successful-call .content {
+	margin-top: 20px;
+}

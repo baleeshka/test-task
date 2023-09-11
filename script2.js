@@ -1,17 +1,16 @@
-// script2.js
-
-const tableBody = document.querySelector('#interactive-table tbody')
 const modal = document.getElementById('modal')
 const operatorNameInput = document.getElementById('operatorName')
 const clientNameInput = document.getElementById('clientName')
 const saveButton = document.getElementById('saveButton')
 const mainPage = document.getElementById('main-page')
 const tabs = document.querySelectorAll('.tab-button')
+const tableBody = document.querySelector('#interactive-table tbody')
+
+let currentQuestionIndex = 0
 let operatorName = ''
 let clientName = ''
-let isQuestionnaireStarted = false
 
-// Здесь определяем вопросы и варианты ответов
+// Объявляем массив с вопросами и ответами
 const questions = [
 	{
 		topic: '',
@@ -118,101 +117,154 @@ const questions = [
 	},
 ]
 
-// Функция для обновления фраз с именем оператора и клиента
-function updateNamesInQuestions() {
-	const operatorNameElements = document.querySelectorAll(
-		'.operator-name-placeholder'
-	)
-	const clientNameElements = document.querySelectorAll(
-		'.client-name-placeholder'
-	)
-
-	operatorNameElements.forEach(element => {
-		if (element.classList.contains('operator-name-placeholder')) {
-			element.innerHTML = `<span style="color: blue;">${operatorName}</span>`
-		}
-	})
-
-	clientNameElements.forEach(element => {
-		if (element.classList.contains('client-name-placeholder')) {
-			element.innerHTML = `<span style="color: blue;">${clientName}</span>`
-		}
-	})
-}
-
-// Функция для определения следующего вопроса на основе ответа пользователя
-function getNextQuestionIndex(currentIndex, userAnswer) {
-	const currentQuestion = questions[currentIndex]
-
-	// Проверяем, есть ли условия для данного ответа
-	if (currentQuestion.conditions && currentQuestion.conditions[userAnswer]) {
-		return currentIndex + currentQuestion.conditions[userAnswer]
-	}
-
-	// Если условий нет, возвращаем индекс следующего вопроса по умолчанию
-	return currentIndex + 1
-}
-
-// Массив для хранения ответов
-const answers = []
-
-let currentIndex = 0
-
-// Функция для отображения вопросов
-function showQuestions() {
-	const currentQuestion = questions[currentIndex]
-	const questionRow = document.createElement('tr')
-	questionRow.innerHTML = `
-        <td>${currentQuestion.topic}</td>
-        <td>${currentQuestion.phrase}</td>
-        <td></td>
-    `
-
-	const radioGroup = document.createElement('div')
-	currentQuestion.options.forEach((option, optionIndex) => {
-		const radioInput = document.createElement('input')
-		radioInput.type = 'radio'
-		radioInput.id = `question${currentIndex}_option${optionIndex}`
-		radioInput.name = `question${currentIndex}`
-		radioInput.value = option
-
-		const radioLabel = document.createElement('label')
-		radioLabel.htmlFor = `question${currentIndex}_option${optionIndex}`
-		radioLabel.innerText = option
-
-		radioGroup.appendChild(radioInput)
-		radioGroup.appendChild(radioLabel)
-
-		radioInput.addEventListener('change', () => {
-			answers[currentIndex] = option
-			currentIndex = getNextQuestionIndex(currentIndex, option) // Определяем следующий вопрос
-			showQuestions()
-		})
-
-		if (answers[currentIndex] === option) {
-			radioInput.checked = true
-		}
-	})
-
-	questionRow.querySelector('td:last-child').appendChild(radioGroup)
-	tableBody.appendChild(questionRow)
-
-	// Вызов функции для обновления имен оператора и клиента
-	updateNamesInQuestions()
-}
+// ...
 
 // Событие при клике на кнопку "Сохранить" в модальном окне
 saveButton.addEventListener('click', () => {
 	operatorName = operatorNameInput.value
 	clientName = clientNameInput.value
 
-	updateNamesInQuestions() // Обновляем текст фраз с именами оператора и клиента в вопросах
-
+	// Скрываем модальное окно и отображаем главную страницу
 	modal.style.display = 'none'
 	mainPage.style.display = 'block'
 
-	showQuestions()
+	// Начинаем отображение вопросов, передавая имена оператора и клиента
+	showNextQuestion(operatorName, clientName)
 })
 
+function showNextQuestion(operatorName, clientName) {
+	if (currentQuestionIndex < questions.length) {
+		// Получаем текущий вопрос
+		const currentQuestion = questions[currentQuestionIndex]
+
+		// Обновляем фразу с учетом имени оператора и клиента
+		const phraseWithNames = currentQuestion.phrase
+			.replace('${operatorName}', operatorName)
+			.replace('${clientName}', clientName)
+
+		// Создаем строку таблицы для вопроса
+		const row = document.createElement('tr')
+		row.innerHTML = `
+			<td>${currentQuestion.topic}</td>
+			<td>${phraseWithNames}</td>
+			<td>
+				<input type="radio" id="option${currentQuestionIndex}-1" name="answer${currentQuestionIndex}" value="${currentQuestion.options[0]}">
+				<label for="option${currentQuestionIndex}-1">${currentQuestion.options[0]}</label><br>
+				<input type="radio" id="option${currentQuestionIndex}-2" name="answer${currentQuestionIndex}" value="${currentQuestion.options[1]}">
+				<label for="option${currentQuestionIndex}-2">${currentQuestion.options[1]}</label><br>
+			</td>
+		`
+
+		tableBody.appendChild(row)
+
+		// Добавьте обработчики событий для радио-кнопок текущего вопроса
+		const radioButtons = document.querySelectorAll(
+			`input[name="answer${currentQuestionIndex}"]`
+		)
+		radioButtons.forEach(radioButton => {
+			radioButton.addEventListener('change', handleRadioButtonChange)
+		})
+	} else {
+		// Все вопросы отображены, выполните какие-либо действия или перейдите к следующему этапу вашего приложения.
+	}
+}
+
+function handleRadioButtonChange(event) {
+	// Обновляем выбранный ответ в объекте вопроса
+	const selectedAnswer = event.target.value
+	questions[currentQuestionIndex].selectedAnswer = selectedAnswer
+
+	// Убираем обработчики событий радио-кнопок текущего вопроса
+	const radioButtons = document.querySelectorAll(
+		`input[name="answer${currentQuestionIndex}"]`
+	)
+	radioButtons.forEach(radioButton => {
+		radioButton.removeEventListener('change', handleRadioButtonChange)
+	})
+
+	// Увеличиваем индекс текущего вопроса
+	currentQuestionIndex++
+
+	// Показываем следующий вопрос
+	showNextQuestion()
+}
+
+// События при переключении разделов
+tabs.forEach(tab => {
+	tab.addEventListener('click', () => {
+		// Делаем активным выбранный раздел
+		tabs.forEach(t => t.classList.remove('active'))
+		tab.classList.add('active')
+
+		// Определяем выбранный раздел
+		const section = tab.getAttribute('data-section')
+
+		// Получаем контейнер для раздела "main-page"
+		const mainPage = document.getElementById('main-page')
+		if (section === 'presentation') {
+			// Показываем контент раздела "Представление"
+			// Скрываем остальные разделы
+			mainPage.style.display = 'block'
+		} else if (section === 'successful-call') {
+			// Ваш код для открытия этого раздела
+
+			// Очищаем содержимое контейнера main-page
+			mainPage.innerHTML = ''
+
+			// Создаем контейнер для раздела "Дозвон, Успешно"
+			const successfulCallSection = document.createElement('div')
+			successfulCallSection.id = 'successful-call-section'
+
+			// Создаем радио-кнопки
+			const paidServiceRadio = document.createElement('label')
+			paidServiceRadio.innerHTML = `
+				<input type="radio" name="serviceType" value="Платная"> Подключение ПЛАТНОЙ услуги
+			`
+
+			const freeServiceRadio = document.createElement('label')
+			freeServiceRadio.innerHTML = `
+				<input type="radio" name="serviceType" value="Бесплатная"> Подключение Бесплатной услуги
+			`
+
+			// Создаем кнопку "Завершить работу с заданием"
+			const finishButton = document.createElement('button')
+			finishButton.id = 'finishButton'
+			finishButton.style.backgroundColor = 'blue'
+			finishButton.style.color = 'white'
+			finishButton.textContent = 'Завершить работу с заданием'
+
+			// Добавляем радио-кнопки и кнопку в контейнер "Дозвон, Успешно"
+			successfulCallSection.appendChild(paidServiceRadio)
+			successfulCallSection.appendChild(document.createElement('br')) // Добавляем перенос строки
+			successfulCallSection.appendChild(freeServiceRadio)
+			successfulCallSection.appendChild(document.createElement('br')) // Добавляем еще один перенос строки
+			successfulCallSection.appendChild(finishButton)
+
+			// Вставляем контейнер "Дозвон, Успешно" внутрь контейнера main-page
+			mainPage.appendChild(successfulCallSection)
+
+			// Отображаем контейнер main-page
+			mainPage.style.display = 'block'
+		} else if (section === 'rejected-call') {
+			// Показываем контент раздела "Дозвон, Отказ"
+			// Скрываем остальные разделы
+			mainPage.style.display = 'none'
+		} else if (section === 'missed-call') {
+			// Показываем контент раздела "Недозвон"
+			// Скрываем остальные разделы
+			mainPage.style.display = 'none'
+		} else if (section === 'callback') {
+			// Показываем контент раздела "Перезвон"
+			// Скрываем остальные разделы
+			mainPage.style.display = 'none'
+		} else if (section === 'telephony-error') {
+			// Показываем контент раздела "Ошибка телефонии"
+			// Скрываем остальные разделы
+			mainPage.style.display = 'none'
+		}
+	})
+})
+
+// Открываем модальное окно при загрузке страницы
 modal.style.display = 'block'
 mainPage.style.display = 'none'
