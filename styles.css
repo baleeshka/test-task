@@ -1,26 +1,17 @@
-/* Общие стили для всего приложения */
-/* Ограничение ширины всего приложения */
-
 @media screen and (min-width: 1000px) {
 	body {
 		max-width: 1000px;
-		margin: 0 auto; /* Центрирование содержимого */
+		margin: 0 auto;
 	}
 }
 
-/* Модальное окно */
-
 .modal {
-	width: 400px; /* Установите желаемую ширину модального окна */
-	height: 400px; /* Установите желаемую высоту модального окна */
+	width: 400px;
+	height: 200px;
 	position: fixed;
 	top: 50%;
 	left: 50%;
-	transform: translate(
-		-50%,
-		-50%
-	); /* Центрирует окно по горизонтали и вертикали */
-	z-index: 1;
+	transform: translate(-50%, -50%);
 }
 
 .modal-content {
@@ -30,14 +21,6 @@
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Заголовок модального окна */
-
-.modal h2 {
-	text-align: center;
-}
-
-/* Вводные поля в модальном окне */
-
 .modal input[type='text'] {
 	width: 95%;
 	padding: 10px;
@@ -45,8 +28,6 @@
 	border: 1px solid #ccc;
 	border-radius: 4px;
 }
-
-/* Кнопка "Сохранить" в модальном окне */
 
 #saveButton {
 	width: 101%;
@@ -63,14 +44,10 @@
 	background-color: #0056b3;
 }
 
-/* Главная страница с разделами и таблицей */
-
 #main-page {
-	display: block; /* По умолчанию отображается */
+	display: block;
 	padding: 20px;
 }
-
-/* Переключатели разделов (табы) */
 
 .tabs {
 	display: flex;
@@ -94,8 +71,6 @@
 	border-bottom: 2px solid #007bff;
 }
 
-/* Интерактивная таблица */
-
 .table-container {
 	margin-top: 20px;
 	overflow-x: auto;
@@ -113,45 +88,40 @@ table td {
 	text-align: left;
 }
 
-/* Оформление разделов */
-
-/* Добавьте классы стилей для каждого раздела (presentation, successful-call и так далее) */
-.presentation {
-	display: block; /* По умолчанию отображается */
+table th:nth-child(3),
+table td:nth-child(3) {
+	min-width: 100px;
 }
 
-/* Другие стили и оформление для разделов здесь */
+.presentation {
+	display: block;
+}
 
-/* Стили для раздела "Дозвон, Успешно" */
 #successful-call {
-	display: block; /* По умолчанию отображается */
+	display: block;
 	padding: 20px;
 	background-color: #ffffff;
 	border-radius: 10px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 	margin-top: 20px;
-	max-width: 400px;
+	max-width: 900px;
 }
 
-/* Стили для радио-кнопок в разделе "Дозвон, Успешно" */
 #successful-call label {
 	display: block;
 	margin-bottom: 10px;
 }
 
-/* Стили для кнопки "Завершить работу с заданием" в разделе "Дозвон, Успешно" */
 #finishButton {
 	background-color: #0094ff;
 	color: white;
 	border: none;
-	border-radius: 16px; /* Более округлая форма кнопки */
-	padding: 15px 25px; /* Большие отступы внутри кнопки */
+	border-radius: 16px;
+	padding: 15px 25px;
 	margin-top: 20px;
 	cursor: pointer;
 	width: 100%;
 }
 
-/* Стили для навигации в разделе "Дозвон, Успешно" */
 #successful-call .navigation {
 	background-color: #0094ff;
 	color: white;
@@ -160,7 +130,82 @@ table td {
 	margin-bottom: 20px;
 }
 
-/* Стили для контента под навигацией в разделе "Дозвон, Успешно" */
 #successful-call .content {
 	margin-top: 20px;
+}
+
+#call-rejection-section {
+	display: block;
+	padding: 20px;
+	background-color: #ffffff;
+	border-radius: 10px;
+	margin-top: 20px;
+	width: 100%;
+	max-width: 900px;
+}
+
+#call-rejection-section label {
+	display: block;
+	margin-bottom: 10px;
+}
+
+#call-rejection-section textarea {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	resize: vertical;
+}
+
+#call-rejection-section #finishButton {
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 16px;
+	padding: 15px 25px;
+	margin-top: 20px;
+	cursor: pointer;
+	width: 100%;
+}
+
+#call-rejection-section #finishButton:hover {
+	background-color: #0056b3;
+}
+
+#recall-section {
+	display: block;
+	padding: 20px;
+	background-color: #ffffff;
+	border-radius: 10px;
+	margin-top: 20px;
+	width: 100%;
+	max-width: 900px;
+}
+
+#recall-section label {
+	display: block;
+	margin-bottom: 10px;
+}
+
+#recall-section textarea {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	resize: vertical;
+}
+
+#recall-section #finishButton {
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 16px;
+	padding: 15px 25px;
+	margin-top: 20px;
+	cursor: pointer;
+	width: 100%;
+}
+
+#recall-section #finishButton:hover {
+	background-color: #0056b3;
 }

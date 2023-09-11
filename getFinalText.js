@@ -1,4 +1,4 @@
-export default function getFinalText(selectedAnswer, clientName) {
+function getFinalText(selectedAnswer, clientName) {
 	if (selectedAnswer === -1) {
 		return (
 			`<span style="color: red;">Проведи РСВ согласно процедуре.</span>.<br>` +
@@ -15,7 +15,7 @@ export default function getFinalText(selectedAnswer, clientName) {
 			`Перейти в &laquo;<span style="color: blue;">Дозвон-Успешно</span>&raquo; Работаем согласно инструкции по закрытию задач`
 		)
 	} else if (selectedAnswer === -3) {
-		return `Перейти во вкладку &laquo;<span style="color: blue;">Перезвон</span>&raquo; Работаем согласно инструкции по закрытию  задач.'`
+		return `Перейти во вкладку &laquo;<span style="color: blue;">Перезвон</span>&raquo; Работаем согласно инструкции по закрытию  задач.`
 	} else if (selectedAnswer === -4) {
 		return `Перейти в раздел &laquo;<span style="color: blue;">Недозвон</span>&raquo; Работаем согласно инструкции по закрытию  задач.`
 	} else if (selectedAnswer === -5) {
@@ -26,3 +26,5 @@ export default function getFinalText(selectedAnswer, clientName) {
 		)
 	}
 }
+
+export default getFinalText
