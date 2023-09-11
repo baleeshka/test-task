@@ -114,8 +114,8 @@ const questions = [
 		phrase: `Подскажите, когда можно будет перезвонить, чтобы поговорить с <span style="color: blue;">{Имя клиента}</span>?`,
 		options: ['Сообщает время', 'Не сообщает время'],
 		conditions: {
-			Да: -3,
-			Нет: -3,
+			'Сообщает время': -3,
+			'Не сообщает время': -3,
 		},
 	},
 ]
@@ -206,7 +206,10 @@ function handleRadioButtonChange(event) {
 		currentQuestionIndex = nextQuestionIndex
 		showNextQuestion()
 	} else {
-		console.log('Цепочка вопросов завершена или произошла ошибка.')
+		console.log(
+			'Цепочка вопросов завершена или произошла ошибка.',
+			nextQuestionIndex
+		)
 		const finalText = getFinalText(nextQuestionIndex, clientName)
 
 		// Создать строку для финального текста
