@@ -12,8 +12,8 @@ let operatorName = ''
 let clientName = ''
 let currentQuestionIndex = 0
 let currentQuestion
+const userAnswers = {}
 
-// Объявляем массив с вопросами и ответами
 const questions = [
 	{
 		topic: '',
@@ -153,40 +153,46 @@ saveButton.addEventListener('click', () => {
 	operatorName = operatorNameInput.value
 	clientName = clientNameInput.value
 
-	// Скрываем модальное окно и отображаем главную страницу
 	modal.style.display = 'none'
 	mainPage.style.display = 'block'
 	interactiveTable.style.display = ''
 
-	// Начинаем отображение вопросов, передавая имена оператора и клиента
-	showNextQuestion() // Не передаем аргументы, так как используем уже объявленные переменные
+	showNextQuestion()
 })
 
 function showNextQuestion() {
 	if (currentQuestionIndex < questions.length) {
-		// Получаем текущий вопрос
 		currentQuestion = questions[currentQuestionIndex]
+
+		const savedAnswer = userAnswers[currentQuestionIndex]
 
 		const phraseWithNames = currentQuestion.phrase
 			.replaceAll('{Ваше имя}', operatorName)
 			.replaceAll('{Имя клиента}', clientName)
 
-		// Создаем строку таблицы для вопроса
 		const row = document.createElement('tr')
+		row.setAttribute('data-question-index', currentQuestionIndex)
 		row.innerHTML = `
-			<td>${currentQuestion.topic}</td>
-			<td>${phraseWithNames}</td>
-			<td>
-				<input type="radio" id="option${currentQuestionIndex}-1" name="answer${currentQuestionIndex}" value="${currentQuestion.options[0]}">
-				<label for="option${currentQuestionIndex}-1">${currentQuestion.options[0]}</label><br>
-				<input type="radio" id="option${currentQuestionIndex}-2" name="answer${currentQuestionIndex}" value="${currentQuestion.options[1]}">
-				<label for="option${currentQuestionIndex}-2">${currentQuestion.options[1]}</label><br>
-			</td>
-		`
+      <td>${currentQuestion.topic}</td>
+      <td>${phraseWithNames}</td>
+      <td>
+        <input type="radio" id="option${currentQuestionIndex}-1" name="answer${currentQuestionIndex}" value="${
+			currentQuestion.options[0]
+		}" ${savedAnswer === currentQuestion.options[0] ? 'checked' : ''}>
+        <label for="option${currentQuestionIndex}-1">${
+			currentQuestion.options[0]
+		}</label><br>
+        <input type="radio" id="option${currentQuestionIndex}-2" name="answer${currentQuestionIndex}" value="${
+			currentQuestion.options[1]
+		}" ${savedAnswer === currentQuestion.options[1] ? 'checked' : ''}>
+        <label for="option${currentQuestionIndex}-2">${
+			currentQuestion.options[1]
+		}</label><br>
+      </td>
+    `
 
 		tableBody.appendChild(row)
 
-		// Добавьте обработчики событий для радио-кнопок текущего вопроса
 		const radioButtons = document.querySelectorAll(
 			`input[name="answer${currentQuestionIndex}"]`
 		)
@@ -198,9 +204,30 @@ function showNextQuestion() {
 
 function handleRadioButtonChange(event) {
 	const selectedAnswer = event.target.value
-	questions[currentQuestionIndex].selectedAnswer = selectedAnswer
 
-	const nextQuestionIndex = currentQuestion.conditions[selectedAnswer]
+	const questionIndex = parseInt(event.target.name.match(/\d+/)[0])
+
+	const finalRowsToRemove = document.querySelectorAll(`tr[data-final="true"]`)
+	finalRowsToRemove.forEach(row => {
+		if (row.getAttribute('data-question-index') >= questionIndex) {
+			row.remove()
+		}
+	})
+
+	for (let i = questionIndex + 1; i < questions.length; i++) {
+		delete userAnswers[i]
+	}
+
+	for (let i = questionIndex + 1; i < questions.length; i++) {
+		const rowToRemove = document.querySelector(`tr[data-question-index="${i}"]`)
+		if (rowToRemove) {
+			rowToRemove.remove()
+		}
+	}
+
+	userAnswers[questionIndex] = selectedAnswer
+
+	const nextQuestionIndex = questions[questionIndex].conditions[selectedAnswer]
 
 	if (nextQuestionIndex >= 0 && nextQuestionIndex < questions.length) {
 		currentQuestionIndex = nextQuestionIndex
@@ -212,30 +239,25 @@ function handleRadioButtonChange(event) {
 		)
 		const finalText = getFinalText(nextQuestionIndex, clientName)
 
-		// Создать строку для финального текста
 		const row = document.createElement('tr')
+		row.setAttribute('data-final', 'true')
 		row.innerHTML = `
         <td></td>
         <td>${finalText}</td>
         <td></td>
       `
 
-		// Добавить строку с финальным текстом в таблицу
 		tableBody.appendChild(row)
 	}
 }
 
-// События при переключении разделов
 tabs.forEach(tab => {
 	tab.addEventListener('click', () => {
-		// Делаем активным выбранный раздел
 		tabs.forEach(t => t.classList.remove('active'))
 		tab.classList.add('active')
 
-		// Определяем выбранный раздел
 		const section = tab.getAttribute('data-section')
 
-		// Получаем контейнер для раздела "main-page"
 		const mainPage = document.getElementById('main-page')
 		if (section === 'presentation') {
 			mainPage.innerHTML = ''
@@ -244,11 +266,9 @@ tabs.forEach(tab => {
 			mainPage.innerHTML = ''
 			interactiveTable.style.display = 'none'
 
-			// Создаем контейнер для раздела "Дозвон, Успешно"
 			const successfulCallSection = document.createElement('div')
 			successfulCallSection.id = 'successful-call-section'
 
-			// Создаем радио-кнопки
 			const paidServiceRadio = document.createElement('label')
 			paidServiceRadio.innerHTML = `
 				<input type="radio" name="serviceType" value="Платная"> Подключение ПЛАТНОЙ услуги
@@ -259,51 +279,35 @@ tabs.forEach(tab => {
 				<input type="radio" name="serviceType" value="Бесплатная"> Подключение БЕСПЛАТНОЙ услуги
 			`
 
-			// Создаем кнопку "Завершить работу с заданием"
 			const finishButton = document.createElement('button')
 			finishButton.id = 'finishButton'
 			finishButton.style.color = 'white'
 			finishButton.textContent = 'Завершить работу с заданием'
 
-			// Добавляем радио-кнопки и кнопку в контейнер "Дозвон, Успешно"
 			successfulCallSection.appendChild(paidServiceRadio)
-			successfulCallSection.appendChild(document.createElement('br')) // Добавляем перенос строки
+			successfulCallSection.appendChild(document.createElement('br'))
 			successfulCallSection.appendChild(freeServiceRadio)
-			successfulCallSection.appendChild(document.createElement('br')) // Добавляем еще один перенос строки
+			successfulCallSection.appendChild(document.createElement('br'))
 			successfulCallSection.appendChild(finishButton)
 
-			// Вставляем контейнер "Дозвон, Успешно" внутрь контейнера main-page
 			mainPage.appendChild(successfulCallSection)
 
-			// Отображаем контейнер main-page
 			mainPage.style.display = 'block'
 		} else if (section === 'rejected-call') {
-			// Ваш код для открытия этого раздела
-
-			// Очищаем содержимое контейнера main-page
 			mainPage.innerHTML = ''
 			interactiveTable.style.display = 'none'
-
-			// Показываем контент раздела "Дозвон, Отказ"
 		} else if (section === 'missed-call') {
 			mainPage.innerHTML = ''
 			interactiveTable.style.display = 'none'
-
-			// Показываем контент раздела "Недозвон"
 		} else if (section === 'callback') {
 			mainPage.innerHTML = ''
 			interactiveTable.style.display = 'none'
-
-			// Показываем контент раздела "Перезвон"
 		} else if (section === 'telephony-error') {
 			mainPage.innerHTML = ''
 			interactiveTable.style.display = 'none'
-
-			// Показываем контент раздела "Ошибка телефонии"
 		}
 	})
 })
 
-// Открываем модальное окно при загрузке страницы
 modal.style.display = 'block'
 mainPage.style.display = 'none'
