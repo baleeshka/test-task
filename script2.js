@@ -5,10 +5,13 @@ const saveButton = document.getElementById('saveButton')
 const mainPage = document.getElementById('main-page')
 const tabs = document.querySelectorAll('.tab-button')
 const tableBody = document.querySelector('#interactive-table tbody')
+const interactiveTable = document.getElementById('interactive-table')
+interactiveTable.style.display = 'none'
 
-let currentQuestionIndex = 0
 let operatorName = ''
 let clientName = ''
+let currentQuestionIndex = 0
+let currentQuestion
 
 // Объявляем массив с вопросами и ответами
 const questions = [
@@ -26,9 +29,9 @@ const questions = [
 	},
 	{
 		topic: '',
-		phrase: `Здравствуйте, меня зовут <span style="color: blue;">${operatorName}</span>, я 
+		phrase: `Здравствуйте, меня зовут <span style="color: blue;">{Ваше имя}</span>, я 
                       <span style="font-weight: bold; color: red;">Представляю Тинькофф</span>. Я разговариваю 
-                      с <span style="color: blue;">${clientName}</span>?`,
+                      с <span style="color: blue;">{Имя клиента}</span>?`,
 		options: ['Да', 'Нет'],
 		conditions: {
 			Да: 2,
@@ -37,7 +40,7 @@ const questions = [
 	},
 	{
 		topic: '',
-		phrase: `Очень приятно, <span style="color: blue;">${clientName}</span>. Вы готовы уделить мне 2-3 минуты Вашего внимания и ответить на пару вопросов?`,
+		phrase: `Очень приятно, <span style="color: blue;">{Имя клиента}</span>. Вы готовы уделить мне 2-3 минуты Вашего внимания и ответить на пару вопросов?`,
 		options: ['Да', 'Нет'],
 		conditions: {
 			Да: 3,
@@ -47,7 +50,7 @@ const questions = [
 	{
 		topic: '',
 		phrase:
-			`<span style="color: blue;">${clientName}</span>, спасибо, что вы являетесь нашим клиентом. Позвольте сообщить, что мы подключаем Клиентам особую программу страхования, которая обеспечит Вам надёжную финансовую защиту при потере трудоспособности в результате несчастного случая, а также от потери работы.<br>` +
+			`<span style="color: blue;">{Имя клиента}</span>, спасибо, что вы являетесь нашим клиентом. Позвольте сообщить, что мы подключаем Клиентам особую программу страхования, которая обеспечит Вам надёжную финансовую защиту при потере трудоспособности в результате несчастного случая, а также от потери работы.<br>` +
 			'При наступлении страхового случая по рискам "Уход из жизни" в результате НС и "Инвалидность 1, 2 группы" в результате НС, размер страховой выплаты составит 160% от задолженности на дату наступления страхового случая. Например: если задолженность составляла 100 000 рублей, то страховая выплата составить 160 000 рублей.<br>' +
 			'<br>' +
 			'При наступлении страхового случая по риску "Потеря работы", задолженность в пределах 120 000 рублей будет погашена за счёт страховой компании.<br>' +
@@ -61,13 +64,13 @@ const questions = [
 	{
 		topic: '',
 		phrase:
-			`<span style="color: blue;">${clientName}</span>, плата за услугу составляет всего 0,89% от суммы задолженности, на момент формирования счет-выписки. Например, в случае наличия задолженности в 1000 рублей плата за программу будет составлять всего 8 рублей 90 копеек в месяц. При этом, в случае, если задолженность отсутствует, то плата за программу не взимается.<br>' +
-		'Согласитесь, это выгодное предложение?<br>` +
+			`<span style="color: blue;">{Имя клиента}</span>, плата за услугу составляет всего 0,89% от суммы задолженности, на момент формирования счет-выписки. Например, в случае наличия задолженности в 1000 рублей плата за программу будет составлять всего 8 рублей 90 копеек в месяц. При этом, в случае, если задолженность отсутствует, то плата за программу не взимается.<br>' +
+			'Согласитесь, это выгодное предложение?<br>` +
 			'<br>' +
 			'<b>ВАЖНО! Если клиент не согласен по критерию цены предлагай льготную программу</b>. <br>' +
 			'<br>' +
-			`<span style="color: blue;">${clientName}</span>, в таком случае, я могу предложить вам эту де страховую программу, но на льготных условиях:<br>' +
-		'В течение 90 дней после подключения плата за услугу &laquo;Страхование задолженности&raquo; не будет списываться, и Вы сможете оценить все достоинства услуги совершенно бесплатно. В дальнейшем плата за нее составит всего 0,89% от суммы задолженности.`,
+			`<span style="color: blue;">{Имя клиента}</span>, в таком случае, я могу предложить вам эту же страховую программу, но на льготных условиях:<br>` +
+			`В течение 90 дней после подключения плата за услугу &laquo;Страхование задолженности&raquo; не будет списываться, и Вы сможете оценить все достоинства услуги совершенно бесплатно. В дальнейшем плата за нее составит всего 0,89% от суммы задолженности.`,
 		options: ['Да', 'Нет'],
 		conditions: {
 			Да: 5,
@@ -99,7 +102,7 @@ const questions = [
 	},
 	{
 		topic: '',
-		phrase: `Скажите, вы знакомы с <span style="color: blue;">${clientName}</span>?`,
+		phrase: `Скажите, вы знакомы с <span style="color: blue;">{Имя клиента}</span>?`,
 		options: ['Да', 'Нет'],
 		conditions: {
 			Да: 8,
@@ -108,7 +111,7 @@ const questions = [
 	},
 	{
 		topic: '',
-		phrase: `Подскажите, когда можно будет перезвонить, чтобы поговорить с <span style="color: blue;">${clientName}</span>`,
+		phrase: `Подскажите, когда можно будет перезвонить, чтобы поговорить с <span style="color: blue;">{Имя клиента}</span>`,
 		options: ['Да', 'Нет'],
 		conditions: {
 			Да: -3,
@@ -117,9 +120,35 @@ const questions = [
 	},
 ]
 
-// ...
+function getFinalText(selectedAnswer, clientName) {
+	if (selectedAnswer === -1) {
+		return (
+			`<span style="color: red;">Проведи РСВ согласно процедуре.</span>.<br>` +
+			`<br>` +
+			`Если работы с возражениями проведена и клиент всё равно отказался, то:<br>` +
+			`1) Сообщить: <span style="color: blue;">${clientName}</span>, Благодарю вас за уделённое время. Если возникнет желание подключить услугу страхования жизни, можете это сделать в мобильном приложении или на сайте www.tinkoff.ru <br>` +
+			`<br>` +
+			`2) Перейти во вкладку &laquo;<span style="color: blue;">Отказ</span>&raquo;, закрыть задачу согласно соответствующей инструкции.`
+		)
+	} else if (selectedAnswer === -2) {
+		return (
+			`Плата за страхование будет списываться с вашей карты ежемесячно. Программа начнёт действовать с момента формирования следующей счёт-выписки. В случае нежелания далее получать страховую защиту, вы можете в любое время отключить её в мобильном приложении или в личном кабинете на сайте www.tinkoff.ru. Благодарю вас. Услуга страхования успешно подключена. Всего доброго, до свидания.<br>` +
+			`<br>` +
+			`Перейти в &laquo;<span style="color: blue;">Дозвон-Успешно</span>&raquo; Работаем согласно инструкции по закрытию задач`
+		)
+	} else if (selectedAnswer === -3) {
+		return `Перейти во вкладку &laquo;<span style="color: blue;">Перезвон</span>&raquo; Работаем согласно инструкции по закрытию  задач.'`
+	} else if (selectedAnswer === -4) {
+		return `Перейти в раздел &laquo;<span style="color: blue;">Недозвон</span>&raquo; Работаем согласно инструкции по закрытию  задач.`
+	} else if (selectedAnswer === -5) {
+		return (
+			`Приношу извинения. Всего доброго!<br>` +
+			`<br>` +
+			`Перейти в раздел &laquo;<span style="color: blue;">Отказ</span>&raquo; Работаем согласно инструкции по закрытию  задач.`
+		)
+	}
+}
 
-// Событие при клике на кнопку "Сохранить" в модальном окне
 saveButton.addEventListener('click', () => {
 	operatorName = operatorNameInput.value
 	clientName = clientNameInput.value
@@ -127,20 +156,20 @@ saveButton.addEventListener('click', () => {
 	// Скрываем модальное окно и отображаем главную страницу
 	modal.style.display = 'none'
 	mainPage.style.display = 'block'
+	interactiveTable.style.display = ''
 
 	// Начинаем отображение вопросов, передавая имена оператора и клиента
-	showNextQuestion(operatorName, clientName)
+	showNextQuestion() // Не передаем аргументы, так как используем уже объявленные переменные
 })
 
-function showNextQuestion(operatorName, clientName) {
+function showNextQuestion() {
 	if (currentQuestionIndex < questions.length) {
 		// Получаем текущий вопрос
-		const currentQuestion = questions[currentQuestionIndex]
+		currentQuestion = questions[currentQuestionIndex]
 
-		// Обновляем фразу с учетом имени оператора и клиента
 		const phraseWithNames = currentQuestion.phrase
-			.replace('${operatorName}', operatorName)
-			.replace('${clientName}', clientName)
+			.replaceAll('{Ваше имя}', operatorName)
+			.replaceAll('{Имя клиента}', clientName)
 
 		// Создаем строку таблицы для вопроса
 		const row = document.createElement('tr')
@@ -164,29 +193,33 @@ function showNextQuestion(operatorName, clientName) {
 		radioButtons.forEach(radioButton => {
 			radioButton.addEventListener('change', handleRadioButtonChange)
 		})
-	} else {
-		// Все вопросы отображены, выполните какие-либо действия или перейдите к следующему этапу вашего приложения.
 	}
 }
 
 function handleRadioButtonChange(event) {
-	// Обновляем выбранный ответ в объекте вопроса
 	const selectedAnswer = event.target.value
 	questions[currentQuestionIndex].selectedAnswer = selectedAnswer
 
-	// Убираем обработчики событий радио-кнопок текущего вопроса
-	const radioButtons = document.querySelectorAll(
-		`input[name="answer${currentQuestionIndex}"]`
-	)
-	radioButtons.forEach(radioButton => {
-		radioButton.removeEventListener('change', handleRadioButtonChange)
-	})
+	const nextQuestionIndex = currentQuestion.conditions[selectedAnswer]
 
-	// Увеличиваем индекс текущего вопроса
-	currentQuestionIndex++
+	if (nextQuestionIndex >= 0 && nextQuestionIndex < questions.length) {
+		currentQuestionIndex = nextQuestionIndex
+		showNextQuestion()
+	} else {
+		console.log('Цепочка вопросов завершена или произошла ошибка.')
+		const finalText = getFinalText(nextQuestionIndex, clientName)
 
-	// Показываем следующий вопрос
-	showNextQuestion()
+		// Создать строку для финального текста
+		const row = document.createElement('tr')
+		row.innerHTML = `
+        <td></td>
+        <td>${finalText}</td>
+        <td></td>
+      `
+
+		// Добавить строку с финальным текстом в таблицу
+		tableBody.appendChild(row)
+	}
 }
 
 // События при переключении разделов
@@ -202,14 +235,11 @@ tabs.forEach(tab => {
 		// Получаем контейнер для раздела "main-page"
 		const mainPage = document.getElementById('main-page')
 		if (section === 'presentation') {
-			// Показываем контент раздела "Представление"
-			// Скрываем остальные разделы
-			mainPage.style.display = 'block'
-		} else if (section === 'successful-call') {
-			// Ваш код для открытия этого раздела
-
-			// Очищаем содержимое контейнера main-page
 			mainPage.innerHTML = ''
+			interactiveTable.style.display = ''
+		} else if (section === 'successful-call') {
+			mainPage.innerHTML = ''
+			interactiveTable.style.display = 'none'
 
 			// Создаем контейнер для раздела "Дозвон, Успешно"
 			const successfulCallSection = document.createElement('div')
@@ -223,13 +253,12 @@ tabs.forEach(tab => {
 
 			const freeServiceRadio = document.createElement('label')
 			freeServiceRadio.innerHTML = `
-				<input type="radio" name="serviceType" value="Бесплатная"> Подключение Бесплатной услуги
+				<input type="radio" name="serviceType" value="Бесплатная"> Подключение БЕСПЛАТНОЙ услуги
 			`
 
 			// Создаем кнопку "Завершить работу с заданием"
 			const finishButton = document.createElement('button')
 			finishButton.id = 'finishButton'
-			finishButton.style.backgroundColor = 'blue'
 			finishButton.style.color = 'white'
 			finishButton.textContent = 'Завершить работу с заданием'
 
@@ -246,21 +275,28 @@ tabs.forEach(tab => {
 			// Отображаем контейнер main-page
 			mainPage.style.display = 'block'
 		} else if (section === 'rejected-call') {
+			// Ваш код для открытия этого раздела
+
+			// Очищаем содержимое контейнера main-page
+			mainPage.innerHTML = ''
+			interactiveTable.style.display = 'none'
+
 			// Показываем контент раздела "Дозвон, Отказ"
-			// Скрываем остальные разделы
-			mainPage.style.display = 'none'
 		} else if (section === 'missed-call') {
+			mainPage.innerHTML = ''
+			interactiveTable.style.display = 'none'
+
 			// Показываем контент раздела "Недозвон"
-			// Скрываем остальные разделы
-			mainPage.style.display = 'none'
 		} else if (section === 'callback') {
+			mainPage.innerHTML = ''
+			interactiveTable.style.display = 'none'
+
 			// Показываем контент раздела "Перезвон"
-			// Скрываем остальные разделы
-			mainPage.style.display = 'none'
 		} else if (section === 'telephony-error') {
+			mainPage.innerHTML = ''
+			interactiveTable.style.display = 'none'
+
 			// Показываем контент раздела "Ошибка телефонии"
-			// Скрываем остальные разделы
-			mainPage.style.display = 'none'
 		}
 	})
 })

@@ -18,33 +18,33 @@
 		</div>
 	</div>
 
-	<!-- Главная страница с разделами и интерактивной таблицей -->
-	<div id="main-page">
-		<!-- Переключатели разделов -->
-		<div class="tabs">
-			<button class="tab-button active" data-section="presentation">Представление</button>
-			<button class="tab-button" data-section="successful-call">Дозвон, Успешно</button>
-			<button class="tab-button" data-section="rejected-call">Дозвон, Отказ</button>
-			<button class="tab-button" data-section="missed-call">Недозвон</button>
-			<button class="tab-button" data-section="callback">Перезвон</button>
-			<button class="tab-button" data-section="telephony-error">Ошибка телефонии</button>
-		</div>
+	<div class="tabs">
+		<button class="tab-button active" data-section="presentation">Представление</button>
+		<button class="tab-button" data-section="successful-call">Дозвон, Успешно</button>
+		<button class="tab-button" data-section="rejected-call">Дозвон, Отказ</button>
+		<button class="tab-button" data-section="missed-call">Недозвон</button>
+		<button class="tab-button" data-section="callback">Перезвон</button>
+		<button class="tab-button" data-section="telephony-error">Ошибка телефонии</button>
+	</div>
 
-		<!-- Интерактивная таблица -->
-		<div class="table-container">
-			<table id="interactive-table">
-				<thead>
-					<tr>
-						<th>Тема</th>
-						<th>Фраза</th>
-						<th>Ответ</th>
-					</tr>
-				</thead>
-				<tbody>
-					<!-- Здесь будет генерироваться контент таблицы динамически с использованием JavaScript -->
-				</tbody>
-			</table>
-		</div>
+	<div id="main-page"></div>
+
+	<div class="table-container">
+		<!-- Таблица -->
+		<table id="interactive-table">
+			<!-- Заголовок таблицы (thead) -->
+			<thead>
+				<tr>
+					<th>Тема</th>
+					<th>Фраза</th>
+					<th>Ответ</th>
+				</tr>
+			</thead>
+			<!-- Тело таблицы (tbody) -->
+			<tbody>
+				<!-- Здесь будут добавляться строки в таблицу -->
+			</tbody>
+		</table>
 	</div>
 
 	<script src="script2.js"></script>

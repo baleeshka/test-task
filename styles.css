@@ -141,7 +141,7 @@ table td {
 
 /* Стили для кнопки "Завершить работу с заданием" в разделе "Дозвон, Успешно" */
 #finishButton {
-	background-color: #0094ff; /* Более светлая синяя кнопка */
+	background-color: #0094ff;
 	color: white;
 	border: none;
 	border-radius: 16px; /* Более округлая форма кнопки */
